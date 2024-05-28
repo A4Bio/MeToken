@@ -1,0 +1,5 @@
+augment_eps: 0.0
+siamese_dropout: 0.1
+conv_dropout: 0.1
+mlp_dropout: 0.1
+vocab: 26

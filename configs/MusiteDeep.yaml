@@ -1,0 +1,6 @@
+in_channel: 500
+mid_channel: 64
+out_channel: 128
+in_dim: 24
+mid_dim: 16
+vocab: 26
