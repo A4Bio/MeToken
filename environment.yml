@@ -184,7 +184,8 @@ dependencies:
     - torch==2.0.0
     - torch-cluster==1.6.3
     - torch-geometric==2.5.3
-    - torch-scatter==2.1.1+pt20cu117
+  # - torch-scatter==2.1.1+pt20cu117 error in this one, so changed as follows
+    - torch-scatter
     - torch-sparse==0.6.18
     - torchaudio==2.0.1
     - torcheval==0.0.7
