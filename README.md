@@ -8,14 +8,15 @@ This repository contains the open-source implementation of the paper "MeToken: U
 
 ## Table of Contents
 
-<!-- - [Introduction](#introduction)
+- [Introduction](#introduction)
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
   - [Inference](#inference)
   - [Testing](#testing)
+- [References](#references)
+- [Contact](#contact)
 - [License](#license)
-- [Citations](#citations)  -->
 
 ## Introduction
 Post-translational modifications (PTMs) are crucial for regulating protein function and interactions. Accurately predicting PTM sites and their types helps understand biological processes and disease mechanisms. Traditional computational approaches mainly focus on sequence motifs for PTM prediction, often neglecting the role of protein structure. 
