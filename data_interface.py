@@ -1,13 +1,14 @@
 import inspect
 from torch.utils.data import DataLoader
-from src.interface.data_interface import DInterface_base
+import pytorch_lightning as pl
 from src.datasets.ptm_dataset import PTMDataset
 
 
-class DInterface(DInterface_base):
-    def __init__(self,**kwargs):
-        super().__init__(**kwargs)
+class DInterface(pl.LightningDataModule):
+    def __init__(self, **kwargs):
+        super().__init__()
         self.save_hyperparameters()
+        self.batch_size = self.hparams.batch_size
         self.load_data_module()
 
     def setup(self, stage=None):

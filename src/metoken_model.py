@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from transformers import AutoTokenizer
-from src.tools import gather_nodes, _dihedrals, _get_rbf, _normalize, _quaternions
-from src.modules.metoken_module import StructureEncoder, MeTokenDecoder
+from src.design_utils import gather_nodes, _dihedrals, _get_rbf, _normalize, _quaternions
+from src.metoken_module import StructureEncoder, MeTokenDecoder
 
 
 def _get_v_direct(X, eps=1e-6):

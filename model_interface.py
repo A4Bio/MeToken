@@ -1,16 +1,16 @@
 import inspect
 import torch
 import os
-import wandb
 import numpy as np
-from src.interface.model_interface import MInterface_base
 from omegaconf import OmegaConf
 from torchmetrics import AUROC
 from torcheval.metrics import MulticlassAUPRC
 from sklearn.metrics import accuracy_score, f1_score, matthews_corrcoef, precision_score, recall_score
+import pytorch_lightning as pl
+from src.metoken_model import MeToken_Model
 
 
-class MInterface(MInterface_base):
+class MInterface(pl.LightningModule):
     def __init__(self, model_name=None, loss=None, lr=None, **kargs):
         super().__init__()
         self.save_hyperparameters(logger=False)
@@ -104,16 +104,6 @@ class MInterface(MInterface_base):
             pr_metric.update(torch.tensor(new_probs), torch.tensor(new_trues))
             auprc = pr_metric.compute().item()
 
-        if self.trainer.is_global_zero:
-            wandb.log({
-                'Test/Accuracy': accuracy,
-                'Test/Precision': precision_macro,
-                'Test/Recall': recall,
-                'Test/F1-score': f1_macro,
-                'Test/Mcc-score': mcc,
-                'Test/AUROC': auroc,
-                'Test/AUPRC': auprc
-            })
         print(f'accuracy: {accuracy:.4f}, precision: {precision_macro:.4f}, recall: {recall:.4f}, f1 score: {f1_macro:.4f}, mcc score: {mcc:.4f}, auroc: {auroc:.4f}, auprc: {auprc:.4f}')
         return {'accuracy': accuracy, 'precision': precision_macro, 'recall': recall, 'f1_score': f1_macro, 'mcc_score': mcc, 'auroc': auroc.item(), 'auprc': auprc}       
         
@@ -125,7 +115,6 @@ class MInterface(MInterface_base):
             params = None
         
         if self.hparams.model_name == 'MeToken':
-            from src.models.metoken_model import MeToken_Model
             params.using_metoken = True
             self.model = MeToken_Model(params)
 
