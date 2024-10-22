@@ -215,7 +215,6 @@ class MeToken_Model(nn.Module):
         codebook_mask[indices] = 0
         self.codebook_mask = codebook_mask
 
-        self.pretrain_mode = args.pretrain_mode
         for module in [self.encoder, self.metoken]:
             for param in module.parameters():
                 param.requires_grad = False            
