@@ -1,4 +1,4 @@
-name: MeToken
+name: metoken
 channels:
   - conda-forge
   - bioconda
@@ -43,4 +43,4 @@ dependencies:
     - click
     - aiohttp
     - omegaconf
-prefix: /root/anaconda3/envs/MeToken
+prefix: /root/anaconda3/envs/metoken
