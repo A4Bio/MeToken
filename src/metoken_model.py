@@ -196,12 +196,12 @@ class MeToken_Model(nn.Module):
             nn.Linear(args.hidden_dim, args.hidden_dim)
         )
 
-        self.encoder = StructureEncoder(args.hidden_dim, args.num_encoder_layers, args.dropout, args.module_type)
+        self.encoder = StructureEncoder(args.hidden_dim, args.num_encoder_layers, args.dropout)
         self.metoken = MeToken(args.hidden_dim)
         self.masked_metoken = MeToken(args.hidden_dim)
-        self.decoder = MeTokenDecoder(args.hidden_dim, args.num_encoder_layers, args.dropout, args.module_type)
+        self.decoder = MeTokenDecoder(args.hidden_dim, args.num_encoder_layers, args.dropout)
 
-        self.predictor1 = StructureEncoder(args.hidden_dim, num_encoder_layers=9, dropout=args.dropout, module_type=args.module_type)
+        self.predictor1 = StructureEncoder(args.hidden_dim, num_encoder_layers=9, dropout=args.dropout)
         self.predictor2 = nn.Sequential(
             nn.Linear(args.hidden_dim, args.hidden_dim*2),
             nn.SiLU(),
@@ -216,10 +216,9 @@ class MeToken_Model(nn.Module):
         self.codebook_mask = codebook_mask
 
         self.pretrain_mode = args.pretrain_mode
-        if args.pretrain == 0:
-            for module in [self.encoder, self.metoken]:
-                for param in module.parameters():
-                    param.requires_grad = False            
+        for module in [self.encoder, self.metoken]:
+            for param in module.parameters():
+                param.requires_grad = False            
 
     def get_seq_knearest(self, B, L, mask, k=11):
         seq_k_idx = []
@@ -327,54 +326,12 @@ class MeToken_Model(nn.Module):
         sparse_idx = mask.nonzero()  # index of non-zero values
         batch_id = sparse_idx[:,0]
 
-        if pretrain == True:
-            node_emb = self.encoder(node_emb, seq_k_emb, seq_k_eidx, str_k_emb, str_k_eidx, str_r_emb, str_r_eidx, batch_id)
-            if self.pretrain_mode==1:
-                pass
-            else:
-                token_emb, e_q_loss, u_loss, encoding_indices = self.metoken(node_emb, torch.masked_select(Q, mask == 1), tau)
-                pred_sub_codebook = self.metoken._get_sub_codebook(encoding_indices)
-                node_emb_recon = self.decoder(token_emb, seq_k_eidx, str_k_eidx, str_r_eidx, batch_id)
-                recon_loss = F.mse_loss(node_emb, node_emb_recon)
-                vq_loss = e_q_loss + recon_loss + 0.1 * u_loss
-                    
-                codebook=self.metoken.embeddings.weight
-                codebook_mask=self.codebook_mask
-                masked_codebook=codebook.clone()
-                expanded_mask = codebook_mask.unsqueeze(1).expand(-1, 128)
-                masked_codebook = masked_codebook * expanded_mask
-                with torch.no_grad():
-                    self.masked_metoken.embeddings.weight.copy_(masked_codebook)
-                    masked_tokenemb,masked_embindex=self.masked_metoken(node_emb,None,tau)
-                    masked_recon = self.decoder(masked_tokenemb, seq_k_eidx, str_k_eidx, str_r_eidx, batch_id)
+        node_emb = self.encoder(node_emb, seq_k_emb, seq_k_eidx, str_k_emb, str_k_eidx, str_r_emb, str_r_eidx, batch_id)
+        token_emb, encoding_indices = self.metoken(node_emb, None, tau=1e-4)
 
-                mcm_loss=0
-                gamma=1.0
-                for i in range(0,len(node_emb)):
-                    index=masked_embindex[i]
-                    recon=masked_recon[i]
-                    if codebook_mask[index]==0:
-                        mcm_loss+=(F.cosine_embedding_loss(node_emb[i],recon,torch.ones(1,device='cuda'))**gamma)
-                    else:
-                        mcm_loss+=torch.tensor(0,device='cuda')
-                tot_masked=len(codebook_mask==0)
-                mcm_loss=mcm_loss/tot_masked
+        pred_emb = self.predictor1(token_emb+node_emb, seq_k_emb, seq_k_eidx, str_k_emb, str_k_eidx, str_r_emb, str_r_eidx, batch_id)
+        log_probs = F.log_softmax(self.predictor2(pred_emb), dim=-1)
 
-                eta=10
-                loss=vq_loss+eta*mcm_loss
-                if mode=="train":
-                    return loss
-                batch.update({'Q': torch.masked_select(Q, mask == 1), 'mask': torch.masked_select(mask, mask == 1)})
-                return loss, pred_sub_codebook
-                
-        else:
-            if self.args.module_type in [94]:# 94 as default
-                node_emb = self.encoder(node_emb, seq_k_emb, seq_k_eidx, str_k_emb, str_k_eidx, str_r_emb, str_r_eidx, batch_id)
-                token_emb, encoding_indices = self.metoken(node_emb, None, tau=1e-4)
-
-                pred_emb = self.predictor1(token_emb+node_emb, seq_k_emb, seq_k_eidx, str_k_emb, str_k_eidx, str_r_emb, str_r_eidx, batch_id)
-                log_probs = F.log_softmax(self.predictor2(pred_emb), dim=-1)
-
-                batch.update({'Q': torch.masked_select(Q, mask == 1), 'mask': torch.masked_select(mask, mask == 1),'S': torch.masked_select(S, mask == 1)})
-                return {'log_probs': log_probs,"codebook": self.metoken.embeddings.weight,"node_emb":node_emb,"token_emb":token_emb,"pred_emb":pred_emb,"token_index":encoding_indices}
+        batch.update({'Q': torch.masked_select(Q, mask == 1), 'mask': torch.masked_select(mask, mask == 1),'S': torch.masked_select(S, mask == 1)})
+        return {'log_probs': log_probs,"codebook": self.metoken.embeddings.weight,"node_emb": node_emb,"token_emb": token_emb,"pred_emb": pred_emb,"token_index": encoding_indices}
             

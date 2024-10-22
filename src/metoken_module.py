@@ -72,12 +72,11 @@ class GeneralGNN(nn.Module):
 
 
 class StructureEncoder(nn.Module):
-    def __init__(self,  hidden_dim, num_encoder_layers=3, dropout=0, module_type=0):
+    def __init__(self,  hidden_dim, num_encoder_layers=3, dropout=0):
         """ Graph labeling network """
         super(StructureEncoder, self).__init__()
         encoder_layers = []        
         module = GeneralGNN
-        self.module_type = module_type
         for _ in range(num_encoder_layers):
             encoder_layers.append(
                 module(hidden_dim, hidden_dim*2, dropout=dropout),
@@ -124,12 +123,11 @@ class MeTokenGNN(nn.Module):
     
 
 class MeTokenDecoder(nn.Module):
-    def __init__(self,  hidden_dim, num_decoder_layers=3, dropout=0, module_type=0):
+    def __init__(self,  hidden_dim, num_decoder_layers=3, dropout=0):
         """ Graph labeling network """
         super(MeTokenDecoder, self).__init__()
         encoder_layers = []        
         module = MeTokenGNN
-        self.module_type = module_type
         for _ in range(num_decoder_layers):
             encoder_layers.append(
                 module(hidden_dim, hidden_dim*2, dropout=dropout),

@@ -4,7 +4,7 @@ from transformers import AutoTokenizer
 tokenizer = AutoTokenizer.from_pretrained("facebook/esm2_t33_650M_UR50D")
 
 
-def featurize_GTrans(batch):
+def featurize(batch):
     """ Pack and pad batch into torch tensors """
     # alphabet = 'ACDEFGHIKLMNPQRSTVWYX'
     batch = [one for one in batch if one is not None]

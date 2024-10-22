@@ -1,7 +1,8 @@
 import inspect
-from torch.utils.data import DataLoader
 import pytorch_lightning as pl
+from torch.utils.data import DataLoader
 from src.datasets.ptm_dataset import PTMDataset
+from src.datasets.featurizer import featurize
 
 
 class DInterface(pl.LightningDataModule):
@@ -12,20 +13,15 @@ class DInterface(pl.LightningDataModule):
         self.load_data_module()
 
     def setup(self, stage=None):
-        from src.datasets.featurizer import featurize_GTrans
-        self.collate_fn = featurize_GTrans
+        self.collate_fn = featurize
 
-        # Assign train/val datasets for use in dataloaders
         if stage == 'fit' or stage is None:
             self.trainset = self.instancialize(split='train')
             self.valset = self.instancialize(split='valid')
-
-        # Assign test dataset for use in dataloader(s)
         if stage == 'test' or stage is None:
             self.testset = self.instancialize(split='test')
-        # prediction only
         if stage == "predict":
-            self.predictset=self.instancialize(split='predict')
+            self.predictset = self.instancialize(split='predict')
 
         if stage == 'test' :
             self.test_loader = self.test_dataloader()
@@ -52,7 +48,7 @@ class DInterface(pl.LightningDataModule):
         self.data_module = PTMDataset
 
     def instancialize(self, **other_args):
-        class_args =  list(inspect.signature(self.data_module.__init__).parameters)[1:]
+        class_args = list(inspect.signature(self.data_module.__init__).parameters)[1:]
         inkeys = self.hparams.keys()
         args1 = {}
         for arg in class_args:

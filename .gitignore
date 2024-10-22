@@ -5,3 +5,7 @@ wandb/
 lightning_logs/
 
 data_test/
+
+*.json
+*.hdf5
+*.ckpt

@@ -33,9 +33,7 @@ class MInterface(pl.LightningModule):
         return np.eyes(self.hparams.vocab)[labels]
 
     def forward(self, batch, mode='train', temperature=1.0):
-        with open("./results/output.txt","w")as out:
-            out.write(str(batch))
-        if self.hparams.augment_eps>0:
+        if self.hparams.augment_eps > 0:
             batch['X'] = batch['X'] + self.hparams.augment_eps * torch.randn_like(batch['X'])
 
         results = self.model(batch)
@@ -115,7 +113,6 @@ class MInterface(pl.LightningModule):
             params = None
         
         if self.hparams.model_name == 'MeToken':
-            params.using_metoken = True
             self.model = MeToken_Model(params)
 
     def instancialize(self, Model, **other_args):
