@@ -1,4 +1,0 @@
-dropout: 0.05
-encoder_num: 2
-max_length: 500
-vocab: 26

@@ -1,6 +1,0 @@
-vocab_size: 26
-hidden: 128
-k_neighbors: 8
-features: 'full' 
-dropout: 0.1
-smoothing: 0 # not used

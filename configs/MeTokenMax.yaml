@@ -1,9 +1,0 @@
-augment_eps: 0.0
-hidden_dim: 128
-node_features: 128
-edge_features: 128
-k_neighbors: 30
-dropout: 0.1
-vocab: 26
-num_encoder_layers: 10
-coord_eps: 0.0005

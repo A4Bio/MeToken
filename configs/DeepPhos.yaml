@@ -1,3 +1,0 @@
-dropout: 0.05
-max_length: 500
-vocab: 26
