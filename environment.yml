@@ -1,0 +1,46 @@
+name: MeToken
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python
+  - numpy
+  - scipy
+  - biopython
+  - cudatoolkit
+  - openmm
+  - mmseqs2
+  - ipykernel
+  - jupyter_client
+  - jupyter_core
+  - matplotlib-inline
+  - matplotlib
+  - requests
+  - pandas
+  - scikit-learn
+  - torch
+  - torchvision
+  - torchaudio
+  - transformers
+  - tqdm
+  - pyyaml
+  - pip
+  - pip:
+    - wandb
+    - huggingface-hub
+    - torch-geometric
+    - torch-cluster
+    - torch-sparse
+    - torch-scatter
+    - torchmetrics
+    - torcheval
+    - umap-learn
+    - tensorboard
+    - pytorch-lightning
+    - protobuf
+    - regex
+    - click
+    - aiohttp
+    - omegaconf
+prefix: /root/anaconda3/envs/MeToken
