@@ -2,6 +2,10 @@
 
 This repository contains the open-source implementation of the paper "MeToken: Uniform Micro-Environment Token Boosts Post-Translational Modification Prediction." The MeToken model leverages both sequence and structural information to accurately predict post-translational modification (PTM) types at specific sites on proteins. By tokenizing the micro-environment of each amino acid, MeToken captures the complex factors influencing PTMs, addressing limitations of sequence-only models and improving prediction performance, especially for rare PTM types.
 
+<p align="center" width="100%">
+  <img src='https://github.com/user-attachments/assets/a6e22ef7-9add-4e14-8cfe-4299c275b209' width="100%">
+</p>
+
 ## Table of Contents
 
 <!-- - [Introduction](#introduction)
