@@ -69,8 +69,6 @@ python inference.py --pdb_file_path examples/Q16613.pdb --predict_indices 31 79 
 
 ```python
 PTM type at position 31 is phosphorylation.
-PTM type at position 79 is acetylation.
-PTM type at position 114 is ubiquitination.
 ```
 
 ### Testing

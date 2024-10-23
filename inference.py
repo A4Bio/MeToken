@@ -5,6 +5,7 @@ from Bio import PDB
 from omegaconf import OmegaConf
 from src.metoken_model import MeToken_Model
 from src.datasets.featurizer import featurize
+from src.constant import PTMtype_list
 
 
 def parse_arguments():
@@ -27,8 +28,8 @@ def parse_arguments():
         help="Path to save the prediction results in HDF5 format. Default is 'output/predict.hdf5'."
     )
     parser.add_argument(
-        '--predict_indices', type=int, nargs='+', default=[31],
-        help="List of residue indices for PTM prediction."
+        '--query_indices', type=int, nargs='+', default=[31],
+        help="List of residue indices for PTM prediction (Start from 1)."
     )
     return parser.parse_args()
 
@@ -96,7 +97,8 @@ def main():
     args = parse_arguments()
     try:
         protein_data = get_seq_str(args.pdb_file_path)
-        protein_data = apply_ptm_indices(protein_data, args.predict_indices)
+        args.query_indices = [index-1 for index in args.query_indices]
+        protein_data = apply_ptm_indices(protein_data, args.query_indices)
 
         checkpoint = torch.load(args.checkpoint_path)
         params = OmegaConf.load('configs/MeToken.yaml')
@@ -107,8 +109,8 @@ def main():
         result = model(data)
         preds = result['log_probs'].argmax(dim=-1).cpu()
 
-        for pos in args.predict_indices:
-            print(f'PTM type at the position {pos} is {preds[pos]}.\n')
+        for pos in args.query_indices:
+            print(f'PTM type at the position {pos+1} is {PTMtype_list[preds[pos]]}.\n')
     except (FileNotFoundError, ValueError) as e:
         print(f"Error: {e}")
 

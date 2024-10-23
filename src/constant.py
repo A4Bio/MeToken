@@ -1,0 +1,30 @@
+
+
+PTMtype_list = [
+    "Not a PTM type",
+    "Acetylation",
+    "Amidation",
+    "C-linked Glycosylation",
+    "Formylation",
+    "Gamma-carboxyglutamic acid",
+    "Glutathionylation",
+    "Hydroxylation",
+    "Lactylation",
+    "Malonylation",
+    "Methylation",
+    "Myristoylation",
+    "Neddylation",
+    "N-linked Glycosylation",
+    "O-linked Glycosylation",
+    "Oxidation",
+    "Phosphorylation",
+    "Pyrrolidone carboxylic acid",
+    "S-nitrosylation",
+    "S-palmitoylation",
+    "Succinylation",
+    "Sulfation",
+    "Sulfoxidation",
+    "Sumoylation",
+    "Ubiquitination",
+    "in Rare PTM Types"
+]
