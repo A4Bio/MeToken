@@ -42,7 +42,7 @@ Post-translational modifications (PTMs) are crucial for regulating protein funct
 
 3. **Download the pretrained model:**
 
-    We provide a pretrained model for MeToken. [Download it here]() and place it in the pretrained_models directory.
+    We provide a pretrained model for MeToken. [Download it here](https://github.com/A4Bio/MeToken/releases/download/1.0/pretrained_model.zip) and place it in the pretrained_models directory.
 
 ## Usage
 
@@ -94,7 +94,12 @@ This will provide performance metrics and model evaluation results.
 For a complete description of the method, see:
 
 ```text
-TBD
+@article{tan2024metoken,
+  title={MeToken: Uniform Micro-environment Token Boosts Post-Translational Modification Prediction},
+  author={Tan, Cheng and Cao, Zhenxiao and Gao, Zhangyang and Wu, Lirong and Li, Siyuan and Huang, Yufei and Xia, Jun and Hu, Bozhen and Li, Stan Z},
+  journal={arXiv preprint arXiv:2411.01856},
+  year={2024}
+}
 ```
 
 ## Contact
